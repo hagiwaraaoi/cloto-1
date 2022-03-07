@@ -125,6 +125,19 @@
                 {{ notification.message }}
               </v-list-item-title>
             </v-list-item>
+            <v-list-item
+              :style="{
+                'background-color': notification.read_at ? '' : 'rgba(246, 191, 0, 0.2)',
+              }"
+              v-else-if="
+                notification.type === 'Question' 
+              "
+              @click="showItem('question', notification.question_id)"
+            >
+              <v-list-item-title>
+                {{ notification.message }}
+              </v-list-item-title>
+            </v-list-item>
           </div>
         </v-list>
       </v-menu>
@@ -191,8 +204,24 @@ export default {
             NOTIFICATION_SOUND.play();
           }
         });
+
+        
       }
     },
+  },
+  created(){
+
+    Echo.channel('question').listen('QuestionUpdate', (event) => {
+      const name = event.user.handlename || "名無し";
+      const questionMessage = event.title
+      const message = name + "：質問：" + questionMessage;
+      this.unread_notifications_count = (this.unread_notifications_count || 0) + 1;
+      this.notifications = [...this.notifications, {
+        question_id: event.id,
+        type: "Question",
+        message
+      }]
+    })
   },
 
   methods: {
@@ -233,8 +262,14 @@ export default {
     showItem: function (type, item) {
       if (type === 'user') {
         this.$store.dispatch('dialog/open', { type: type, username: item });
-      } else if (type === 'karte' || type === 'post') {
+      } 
+      if (type === 'karte' || type === 'post') {
         this.$store.dispatch('dialog/open', { type: type, id: item });
+      }
+      if(type === "question"){
+        this.$store.dispatch('dialog/open', {
+          type, id: item
+        })
       }
 
       this.markNotificationsAsRead();

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Question;
+use App\Events\QuestionUpdate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
 class QuestionController extends Controller
 {
     /** @var Question */
@@ -75,7 +75,7 @@ class QuestionController extends Controller
         }
 
         // リアルタイム更新は一旦無効化
-        // broadcast(new TimelineUpdated($result));
+        broadcast(new QuestionUpdate($result));
         return response()->json(['message' => '質問が投稿されました。']);
     }
 
