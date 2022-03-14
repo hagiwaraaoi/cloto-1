@@ -23,6 +23,48 @@
         </v-list-item-content>
       </v-list-item>
 
+      <v-list-item exact :to="{ name: 'floor', params: { roomId: 1 } }">
+        <v-list-item-icon>
+          <v-icon>mdi-AccountSchool</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>GROW×VERSE 1</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <div class="pa-2" v-if="$route.name === 'floor'">
+        <v-btn
+          depressed
+          block
+          color="#f6bf00"
+          dark
+          :to="{ name: 'room', params: { roomId: $route.params.roomId } }"
+          :disabled="authUser.seat !== null"
+        >
+          入室
+        </v-btn>
+      </div>
+
+      <v-list-item exact :to="{ name: 'floor', params: { roomId: 2 } }">
+        <v-list-item-icon>
+          <v-icon>mdi-AccountSchoolOutline</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>GROW×VERSE 2</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <div class="pa-2" v-if="$route.name === 'floor'">
+        <v-btn
+          depressed
+          block
+          color="#f6bf00"
+          dark
+          :to="{ name: 'room', params: { roomId: $route.params.roomId } }"
+          :disabled="authUser.seat !== null"
+        >
+          入室
+        </v-btn>
+      </div>
+
       <!-- <v-list-item exact :to="{ name: 'mystudy' }">
         <v-list-item-icon>
           <v-icon>mdi-note-text</v-icon>
@@ -30,7 +72,7 @@
         <v-list-item-content>
           <v-list-item-title>マイスタディ</v-list-item-title>
         </v-list-item-content>
-      </v-list-item> -->
+      </v-list-item>
 
       <v-list-item exact :to="{ name: 'mypage' }">
         <v-list-item-icon>
@@ -39,7 +81,7 @@
         <v-list-item-content>
           <v-list-item-title>マイページ</v-list-item-title>
         </v-list-item-content>
-      </v-list-item>
+      </v-list-item> -->
     </v-list>
 
     <template v-slot:append>
