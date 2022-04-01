@@ -79,12 +79,12 @@
         </template>
         <v-list>
           <div v-for="notification in notifications" :key="notification.id">
-            <!-- フォロー通知 -->
+            <!-- フォロー/友達通知 -->
             <v-list-item
               :style="{
                 'background-color': notification.read_at ? '' : 'rgba(246, 191, 0, 0.2)',
               }"
-              v-if="notification.type === 'UserFollowed'"
+              v-if="notification.type === 'UserFollowed' || notification.type === 'UserFriend' || notification.type === 'UserFriendAgree'"
               @click="showItem('user', notification.username)"
             >
               <v-list-item-title>
@@ -120,6 +120,21 @@
                 notification.type === 'CommentToPostFavorited'
               "
               @click="showItem('post', notification.post_id)"
+            >
+              <v-list-item-title>
+                {{ notification.message }}
+              </v-list-item-title>
+            </v-list-item>
+
+            <!-- 質問への通知 -->
+            <v-list-item
+              :style="{
+                'background-color': notification.read_at ? '' : 'rgba(246, 191, 0, 0.2)',
+              }"
+              v-else-if="
+                notification.type === 'PostQuestion'
+              "
+              @click="showItem('timeline', notification.question_id)"
             >
               <v-list-item-title>
                 {{ notification.message }}
@@ -182,6 +197,17 @@ export default {
         // 通知の取得
         this.getNotifications();
 
+        //質問の通知作成
+        Echo.channel('timeline').listen('NotificationQuestion', (event) => {
+          this.notifications.unshift(
+            {
+              type:'PostQuestion',
+              question_id: event.id,
+              message: event.user.handlename + 'さんから質問が届きました。'
+            }
+          )
+          this.unreadNotificationsCount += 1;
+        });
         // 通知イベントの受信開始
         Echo.channel('user.' + this.authUser.id).listen('NotificationPosted', (event) => {
           this.notifications = event.notifications;
@@ -233,10 +259,13 @@ export default {
     showItem: function (type, item) {
       if (type === 'user') {
         this.$store.dispatch('dialog/open', { type: type, username: item });
-      } else if (type === 'karte' || type === 'post') {
+      } 
+      if (type === 'karte' || type === 'post') {
         this.$store.dispatch('dialog/open', { type: type, id: item });
+      } 
+      if(type === 'question'){
+        this.$store.dispatch('dialog/open', {  type: type, id: item });
       }
-
       this.markNotificationsAsRead();
     },
   },
