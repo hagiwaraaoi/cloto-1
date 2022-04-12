@@ -88,7 +88,6 @@ export default {
           this.friends.push(arr1)
         }
       });
-      console.log(this.friends)
     },
   },
   created() {

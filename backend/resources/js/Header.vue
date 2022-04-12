@@ -198,7 +198,7 @@ export default {
         this.getNotifications();
 
         //質問の通知作成
-        Echo.channel('timeline').listen('NotificationQuestion', (event) => {
+        Echo.channel('question').listen('NotificationQuestion', (event) => {
           this.notifications.unshift(
             {
               type:'PostQuestion',

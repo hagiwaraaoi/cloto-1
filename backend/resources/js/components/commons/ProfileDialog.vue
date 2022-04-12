@@ -333,7 +333,6 @@ export default {
     getUser: async function () {
       let response = await axios.get('/api/users/' + this.username);
       this.user = response.data;
-      console.log(this.user);
       this.showTrueFriends();
       
       // フォロー一覧などから新たなユーザーのグラフのデータを表示する際のデータの初期化
@@ -377,8 +376,6 @@ export default {
      */
     friend: async function () {
       this.friend1Loading = true;
-      console.log(this.user)
-
       let response = await axios.post('/api/users/' + this.user.id + '/friend');
       this.user = response.data;
 
@@ -409,7 +406,6 @@ export default {
           }
         });
       });
-      console.log(this.friendCount)
     },
     
 
