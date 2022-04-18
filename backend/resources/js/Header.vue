@@ -6,7 +6,7 @@
       <img :src="$storage('system') + 'header_logo.svg'" />
     </router-link>
 
-    <span class="mt-4 mr-3 text-h4 font-weight-bold">β1.0</span>
+    <span class="mt-4 mr-3 text-h4 font-weight-bold">β1.2</span>
 
     <v-btn
       text
