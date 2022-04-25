@@ -135,4 +135,8 @@ ide-helper:
 	docker-compose exec app php artisan ide-helper:meta
 	docker-compose exec app php artisan ide-helper:models --nowrite
 exec-db:
+<<<<<<< HEAD
 	docker-compose exec db bash 
+=======
+	docker-compose exec db bash 
+>>>>>>> 18890336f48940332a0ab68cedb121b451101916
