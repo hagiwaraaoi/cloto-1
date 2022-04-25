@@ -134,7 +134,7 @@
               v-else-if="
                 notification.type === 'PostQuestion'
               "
-              @click="showItem('timeline', notification.question_id)"
+              @click="showItem('question', notification.question_id)"
             >
               <v-list-item-title>
                 {{ notification.message }}
