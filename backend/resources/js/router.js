@@ -28,7 +28,7 @@ import progress from '@/views/mystudy/Progress';
 import karte from '@/views/mystudy/Karte';
 import docs from '@/views/mystudy/docs/Docs';
 import notFound from '@/views/errors/NotFound';
-
+import talkView from '@/views/talk';
 const router = new VueRouter({
   mode: 'history',
   routes: [
@@ -86,6 +86,11 @@ const router = new VueRouter({
           component: follower,
         },
         {
+          path: 'talk',
+          name: 'talk',
+          component: talkView,
+        },
+        {
           path: 'friends',
           name: 'friends',
           component: friend,
@@ -102,27 +107,6 @@ const router = new VueRouter({
         },
       ],
     },
-    // {
-    //   path: '/mystudy',
-    //   component: mystudy,
-    //   children: [
-    //     {
-    //       path: 'progress',
-    //       name: 'mystudy',
-    //       component: progress,
-    //     },
-    //     {
-    //       path: 'karte',
-    //       name: 'karte',
-    //       component: karte,
-    //     },
-    //     {
-    //       path: 'docs/:roadName/class/:class',
-    //       name: 'docs',
-    //       component: docs,
-    //     },
-    //   ],
-    // },
     {
       path: '*',
       name: notFound,
