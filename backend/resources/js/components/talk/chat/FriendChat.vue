@@ -1,15 +1,10 @@
 <template>
   <v-container id="friend-chat">
     <div class="chat-main" ref="chatList">
-      <ChatListComponent  v-if="!!user" :chatList="chatList" />
-      <div class="no-select-chat" v-else> ユーザーを選択してください</div>
+      <ChatListComponent v-if="!!user" :chatList="chatList" />
+      <div class="no-select-chat" v-else>ユーザーを選択してください</div>
     </div>
-    <ChatInputComponent 
-      v-if="!!user" 
-      :chatList="chatList"  
-      @submit-chat="handleSubmitChat"
-    />
-
+    <ChatInputComponent v-if="!!user" :chatList="chatList" @submit-chat="handleSubmitChat" />
   </v-container>
 </template>
 
@@ -20,10 +15,10 @@ import { ChatInputComponent } from './Input.vue';
 export const FriendChatComponent = {
   components: {
     ChatListComponent,
-    ChatInputComponent
+    ChatInputComponent,
   },
   props: {
-    user: [Object, undefined]
+    user: [Object, undefined],
   },
   data() {
     return {
@@ -31,32 +26,36 @@ export const FriendChatComponent = {
     };
   },
   watch: {
-    chatList: function() {
-        this.scrollToEnd()
-    }
+    chatList: function () {
+      this.scrollToEnd();
+    },
   },
   computed: {
     authUser() {
       return this.$store.getters['auth/user'];
     },
   },
-  methods:{
-    handleSubmitChat(text){
+  methods: {
+    handleSubmitChat(text) {
       console.log(text);
-      this.chatList.push({
-        type: "right",
-        mode: "text",
-        user: this.authUser,
-        content: text
-      })
+      this.chatList = [
+        {
+          id: new Date().toLocaleString(),
+          type: 'right',
+          mode: 'text',
+          user: this.authUser,
+          content: text,
+          ts: Date.now(),
+        },
+      ];
     },
     scrollToEnd() {
-        this.$nextTick(() => {
-        const chatLog = this.$refs.chatList
-        if (!chatLog) return
-        chatLog.scrollTop = chatLog.scrollHeight
-      })
-    }
+      this.$nextTick(() => {
+        const chatLog = this.$refs.chatList;
+        if (!chatLog) return;
+        chatLog.scrollTop = chatLog.scrollHeight;
+      });
+    },
   },
 };
 
@@ -68,18 +67,25 @@ export default FriendChatComponent;
   display: flex;
   flex-direction: column;
   height: 100%;
+  position: relative;
   .chat-main {
     flex: 0 1 100%;
     background: #fff;
     overflow-y: scroll;
     height: 100%;
   }
-  .no-select-chat{
+  .no-select-chat {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
     width: 100%;
   }
+}
+#talk-chat-input {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 </style>

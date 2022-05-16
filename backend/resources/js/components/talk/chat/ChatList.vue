@@ -1,8 +1,8 @@
 <template>
   <div id="chat-list">
-      <div v-for="chat in chatList"  :key="chat.id">
-        <TextMessageComponent :chat="chat" />
-      </div>
+    <div v-for="chat in chatList" :key="chat.id">
+      <TextMessageComponent :chat="chat" />
+    </div>
   </div>
 </template>
 
@@ -14,9 +14,15 @@ export const ChatListComponent = {
     TextMessageComponent,
   },
   props: {
-    chatList: Array
+    chatList: Array,
   },
 };
 
 export default ChatListComponent;
 </script>
+
+<style lang="scss" scoped>
+#chat-list {
+  margin-bottom: 12rem;
+}
+</style>
