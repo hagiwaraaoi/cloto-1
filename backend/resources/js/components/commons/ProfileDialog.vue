@@ -64,14 +64,48 @@
               <v-row class="mt-3" justify="center" v-if="user.id !== authUser.id">
                 <v-btn
                   :color="!user.following ? 'primary' : 'error'"
-                  :loading="loading"
+                  :loading="followLoading"
                   @click="follow()"
                 >
                   {{ !user.following ? 'フォロー' : 'フォロー解除' }}
                 </v-btn>
-              </v-row>
 
+                <v-btn
+                  :color="user.friended ? 'error' : 'primary'"
+                  :loading="friend1Loading"
+                  @click="friend()"
+                >
+                  {{
+                    user.friending
+                      ? user.friended
+                        ? '友達をやめる'
+                        : '友達申請承諾'
+                      : user.friended
+                      ? '申請取消'
+                      : '友達申請'
+                  }}
+                </v-btn>
+                <v-btn
+                  v-if="user.friending && !user.friended"
+                  :color="'error'"
+                  :loading="friend2Loading"
+                  @click="notFriend()"
+                >
+                  申請拒否
+                </v-btn>
+              </v-row>
               <p class="mt-3 mb-0" v-if="user.followed">フォローされています</p>
+              <p class="mt-3 mb-0">
+                {{
+                  user.friending
+                    ? user.friended
+                      ? '友達です'
+                      : '友達申請されています'
+                    : user.friended
+                    ? '友達申請中です'
+                    : ''
+                }}
+              </p>
               <v-card
                 light
                 flat
@@ -136,7 +170,14 @@
           </v-col>
 
           <v-spacer></v-spacer>
+          <v-col md="3" class="select pa-0" @click="showTrueFriends()">
+            <v-card class="py-4" :color="color" :elevation="show === 'friends' ? 1 : 3">
+              <p class="text-center">友達</p>
+              <p class="text-center mb-0">{{ friendCount }}</p>
+            </v-card>
+          </v-col>
 
+          <v-spacer></v-spacer>
           <v-col md="3" class="select pa-0" @click="showKartes()">
             <v-card class="py-4" :color="color" :elevation="show === 'karte' ? 1 : 3">
               <p class="text-center">カルテ</p>
@@ -233,12 +274,15 @@ export default {
   data() {
     return {
       dialog: false,
-      loading: false, // ローディング制御
+      friend1Loading: false, // ローディング制御
+      friend2Loading: false, // ローディング制御
+      followLoading: false, // ローディング制御
       user: null, // 表示するプロフィール
       show: null, // フォロー/フォロワーどちらを表示するか
       followers: [], // フォロー/フォロワー一覧
       kartes: [], // カルテ一覧
       graphShow: true, //カルテ別の割合、日別のカルテ数を表すグラフの表示の有無
+      friendCount: null,
     };
   },
 
@@ -303,6 +347,8 @@ export default {
     getUser: async function () {
       let response = await axios.get('/api/users/' + this.username);
       this.user = response.data;
+      console.log(this.user);
+      this.showTrueFriends();
       // フォロー一覧などから新たなユーザーのグラフのデータを表示する際のデータの初期化
       this.graphShow = false;
       // フォロー一覧などから新たなユーザーのフォロー・フォロワー一覧を見る際に、それまで見ていたユーザーの情報を残さないために一覧を非表示にする
@@ -313,17 +359,18 @@ export default {
      * フォロー処理
      */
     follow: async function () {
-      this.loading = true;
+      this.followLoading = true;
 
       let response = await axios.post('/api/users/' + this.user.id + '/follow');
       this.user = response.data;
 
-      this.loading = false;
+      this.followLoading = false;
     },
 
     /**
      * フォロー一覧の表示
      */
+
     showFollows: async function () {
       let response = await axios.get('/api/users/' + this.user.id + '/follows');
       this.followers = response.data;
@@ -337,6 +384,43 @@ export default {
       let response = await axios.get('/api/users/' + this.user.id + '/followers');
       this.followers = response.data;
       this.show = 'follower';
+    },
+    /**
+     * 友達追加処理
+     */
+    friend: async function () {
+      this.friend1Loading = true;
+      console.log(this.user);
+      let response = await axios.post('/api/users/' + this.user.id + '/friend');
+      this.user = response.data;
+      this.friend1Loading = false;
+    },
+    /**
+     * 友達拒否処理
+     */
+    notFriend: async function () {
+      this.friend2Loading = true;
+      await axios.delete('/api/users/' + this.user.id + '/notFriend');
+      await this.getUser();
+      this.friend2Loading = false;
+    },
+    /**
+     * 友達登録一覧の表示
+     */
+    showTrueFriends: async function () {
+      this.friendCount = 0;
+      let response1 = await axios.get('/api/users/' + this.authUser.id + '/friends');
+      let response2 = await axios.get('/api/users/' + this.authUser.id + '/maybeFriends');
+      let data1 = [...response1.data];
+      let data2 = [...response2.data];
+      data1.forEach((arr1) => {
+        data2.forEach((arr2) => {
+          if (arr1.id === arr2.id) {
+            this.friendCount += 1;
+          }
+        });
+      });
+      console.log(this.friendCount);
     },
 
     /**
