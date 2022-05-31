@@ -21,6 +21,7 @@ import room from '@/views/room/Room';
 import mypage from '@/views/mypage/Mypage';
 import profile from '@/views/mypage/Profile';
 import follower from '@/views/mypage/Follower';
+import friend from '@/views/mypage/Friends';
 import post from '@/views/mypage/Post';
 import mystudy from '@/views/mystudy/Mystudy';
 import progress from '@/views/mystudy/Progress';
@@ -83,6 +84,11 @@ const router = new VueRouter({
           path: 'followers',
           name: 'followers',
           component: follower,
+        },
+        {
+          path: 'friends',
+          name: 'friends',
+          component: friend,
         },
         {
           path: 'karte',

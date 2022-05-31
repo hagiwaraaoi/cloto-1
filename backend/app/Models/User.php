@@ -210,7 +210,25 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(self::class, 'followers', 'followed_id', 'following_id');
     }
+/**
+     * friends のリレーション
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function friends()
+    {
+        return $this->belongsToMany(self::class, 'friends', 'friending_id', 'friended_id');
+    }
 
+    /**
+     * maybeFriends のリレーション
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function maybeFriends()
+    {
+        return $this->belongsToMany(self::class, 'friends', 'friended_id', 'friending_id');
+    }
     /**
      * 状態データの追加
      *
@@ -318,7 +336,27 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->followers()->where('following_id', $user_id)->exists();
     }
+ /**
+     * 友達登録しているか
+     *
+     * @param  Int  $user_id  友達追加先のユーザー
+     * @return Boolean
+     */
+    public function isFriending(Int $user_id)
+    {
+        return $this->maybeFriends()->where('friending_id', $user_id)->exists();
+    }
 
+    /**
+     * 友達登録されているか
+     *
+     * @param  Int  $user_id  友達追加元のユーザー
+     * @return Boolean
+     */
+    public function isFriended(Int $user_id)
+    {
+        return $this->friends()->where('friended_id', $user_id)->exists();
+    }
     /**
      * 通知の取得
      *
@@ -343,6 +381,24 @@ class User extends Authenticatable implements MustVerifyEmail
                         'type' => 'UserFollowed',
                         'username' => $user->username,
                         'message' => $user->handlename . 'さんにフォローされました！'
+                    ];
+                    break;
+
+                     case 'UserFriend':
+                    // フレンドリクエスト
+                    $data += [
+                        'type' => 'UserFriend',
+                        'username' => $user->username,
+                        'message' => $user->handlename . 'さんから友達申請が届きました！'
+                    ];
+                    break;
+
+                case 'UserFriendAgree':
+                    // フレンドリクエスト承認
+                    $data += [
+                        'type' => 'UserFriendAgree',
+                        'username' => $user->username,
+                        'message' => $user->handlename . 'さんと友達になりました！'
                     ];
                     break;
 
