@@ -21,9 +21,7 @@
 
           <v-list-item class="mb-4" :to="{ name: 'talk' }">
             <v-list-item-content>
-              <v-list-item-title class="text-body-1 font-weight-bold">
-                トーク
-              </v-list-item-title>
+              <v-list-item-title class="text-body-1 font-weight-bold"> トーク </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 
@@ -37,9 +35,7 @@
 
           <v-list-item class="mb-4" :to="{ name: 'friends' }">
             <v-list-item-content>
-              <v-list-item-title class="text-body-1 font-weight-bold">
-                友達一覧
-              </v-list-item-title>
+              <v-list-item-title class="text-body-1 font-weight-bold"> 友達一覧 </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
 

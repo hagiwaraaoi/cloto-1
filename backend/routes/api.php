@@ -43,7 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/status/{status?}', 'UserController@updateStatus');
         Route::get('/users/{user_param}', 'UserController@show');
         Route::post('/users/{user}/friend', 'UserController@friend')->where('user', '[0-9]+');
-        Route::delete('/users/{user}/notFriend', 'UserController@notFriend')->where('user', '[0-9]+');
+        Route::post('/users/{user}/notFriend', 'UserController@notFriend')->where('user', '[0-9]+');
         Route::get('/users/{user}/maybeFriends', 'UserController@maybeFriends')->where('user', '[0-9]+');
         Route::get('/users/{user}/friends', 'UserController@friends')->where('user', '[0-9]+');
         Route::post('/users/{user}/follow', 'UserController@follow')->where('user', '[0-9]+');

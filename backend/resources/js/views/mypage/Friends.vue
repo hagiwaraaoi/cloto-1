@@ -57,12 +57,12 @@ export default {
       this.friends = [];
       let response1 = await axios.get('/api/users/' + this.authUser.id + '/friends');
       let response2 = await axios.get('/api/users/' + this.authUser.id + '/maybeFriends');
-      let data1 = [...response1.data]
-      let data2 = [...response2.data]
+      let data1 = [...response1.data];
+      let data2 = [...response2.data];
       data1.forEach((arr1) => {
         data2.forEach((arr2) => {
-          if(arr1.id===arr2.id){
-            this.friends.push(arr1)
+          if (arr1.id === arr2.id) {
+            this.friends.push(arr1);
           }
         });
       });
@@ -74,20 +74,21 @@ export default {
       this.friends = [];
       let response1 = await axios.get('/api/users/' + this.authUser.id + '/friends');
       let response2 = await axios.get('/api/users/' + this.authUser.id + '/maybeFriends');
-      let data1 = [...response1.data]
-      let data2 = [...response2.data]
+      let data1 = [...response1.data];
+      let data2 = [...response2.data];
       let flag = false;
       data2.forEach((arr1) => {
         flag = false;
         data1.forEach((arr2) => {
-          if(arr1.id===arr2.id){
+          if (arr1.id === arr2.id) {
             flag = true;
           }
         });
-        if(!flag){
-          this.friends.push(arr1)
+        if (!flag) {
+          this.friends.push(arr1);
         }
       });
+      console.log(this.friends);
     },
   },
   created() {
